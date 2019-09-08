@@ -20,10 +20,27 @@ namespace PrabodaApi.Controllers
         public IEnumerable<Tourist> Get()
         {
           
-            return db.Tourist;
-
-            
+            return db.Tourist;      
         }
+
+        [Route("Login/{userName}/{password}")]
+        [HttpGet("{userName}/{password}")]
+        public IActionResult Login(string userName,string password)
+        {
+            if (!db.Tourist.Where(t=>t.UserName==userName).Any())
+            {
+                return NotFound("Wrong UserName");
+            }
+            else if(!db.Tourist.Where(t => t.UserName == userName && t.Password==password).Any())
+            {
+                return BadRequest("Wrong Password");
+            }
+            else
+            {
+                return Json(db.Tourist.FirstOrDefault(t=>t.UserName==userName && t.Password==password));
+            }
+        }
+
         //get details by touristid
         [Route("GetDetailsOfATourist/{id}")]
         [HttpGet("{id}")]
